@@ -15,6 +15,7 @@ from fastapi.responses import StreamingResponse
 from app.downloader import stream_video
 
 from datetime import datetime
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Media Extractor API")
 
@@ -22,6 +23,13 @@ app = FastAPI(title="Media Extractor API")
 class ExtractRequest(BaseModel):
     url: str
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/extract", response_model=VideoInfo)
 def extract_video(req: ExtractRequest):
