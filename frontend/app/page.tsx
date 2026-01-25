@@ -25,13 +25,13 @@ function ResolutionBadge({ height }: { height: number }) {
     return (
       <span
         className="
-        glow-4k
-        px-2.5 py-1
-        text-xs font-bold tracking-wide
-        rounded-md
-        text-black
-        border border-yellow-300
-      "
+      px-3 py-1 text-xs font-bold tracking-wide
+      rounded-md
+      bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200
+      text-black
+      shadow-[0_0_8px_rgba(255,255,150,0.6)]
+      border border-yellow-300
+    "
       >
         4K
       </span>
@@ -110,14 +110,14 @@ export default function Home() {
       <div
         key={opt.format_id}
         className={`flex items-center justify-between p-4 rounded-xl
-    min-h-24        // 👈 ADD THIS
-    bg-white/5 backdrop-blur-xl
-    border border-white/10
-    shadow-lg
-    transition-all duration-200
-    hover:bg-white/10 hover:border-white/20 hover:-translate-y-px
-    ${isBest ? "ring-1 ring-indigo-500/60" : ""}
-  `}
+                    min-h-24
+                    bg-white/10 backdrop-blur-xl
+                    border border-white/20
+                    shadow-lg
+                    transition-all duration-200
+                    hover:bg-white/20 hover:border-white/30 hover:shadow-[0_0_20px_rgba(0,255,128,0.2)]
+                    ${isBest ? "ring-1 ring-indigo-400/80" : ""}
+                  `}
       >
         <div className="flex items-center gap-3">
           <ResolutionBadge height={height} />
@@ -242,13 +242,22 @@ export default function Home() {
   return (
     <main
       className="relative min-h-screen overflow-hidden text-zinc-100 p-6
-  bg-linear-to-br from-zinc-950 via-zinc-900 to-black"
+    bg-gradient-to-br from-purple-800 via-indigo-700 to-cyan-600"
     >
       {/* background blobs */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-32 -left-32 w-130 h-130 rounded-full bg-purple-700/25 blur-[140px]" />
-        <div className="absolute top-1/4 -right-32 w-130 h-130 rounded-full bg-indigo-600/25 blur-[140px]" />
-        <div className="absolute bottom-0 left-1/3 w-130 h-130 rounded-full bg-fuchsia-600/20 blur-[160px]" />
+        <div
+          className="absolute -top-32 -left-32 w-130 h-130 rounded-full bg-pink-600/30 blur-[140px]"
+          style={{ animation: "blob-move 12s infinite ease-in-out" }}
+        />
+        <div
+          className="absolute top-1/4 -right-32 w-130 h-130 rounded-full bg-cyan-500/30 blur-[140px]"
+          style={{ animation: "blob-move 16s infinite ease-in-out" }}
+        />
+        <div
+          className="absolute bottom-0 left-1/3 w-130 h-130 rounded-full bg-yellow-500/20 blur-[160px]"
+          style={{ animation: "blob-move 20s infinite ease-in-out" }}
+        />
       </div>
 
       <div
@@ -290,7 +299,7 @@ export default function Home() {
             <button
               onClick={extract}
               disabled={loading}
-              className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 transition"
+              className="px-8 py-3 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-semibold shadow-md hover:shadow-lg transition"
             >
               {loading ? "Extracting…" : "Extract"}
             </button>
@@ -300,7 +309,7 @@ export default function Home() {
         {/* Skeleton */}
         {loading && (
           <div className="space-y-3 animate-pulse">
-            {[1, 2, 3, 4].map((i) => (
+            {[1, 2, 3].map((i) => (
               <div
                 key={i}
                 className="h-16 rounded bg-zinc-900 border border-zinc-800"
@@ -323,15 +332,19 @@ export default function Home() {
             )}
 
             {progress !== null && (
-              <div className="mt-6 space-y-2">
-                <div className="w-full h-3 bg-zinc-800 rounded overflow-hidden">
+              <div className="mt-8 space-y-3">
+                {/* Label row */}
+                <div className="flex items-center justify-between text-sm text-zinc-400">
+                  <span>Downloading</span>
+                  <span className="tabular-nums">{progress.toFixed(1)}%</span>
+                </div>
+
+                {/* Progress bar */}
+                <div className="relative h-3 rounded-full bg-zinc-800/70 overflow-hidden">
                   <div
-                    className="h-3 bg-green-500 transition-all"
+                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-green-400 via-lime-300 to-green-500 transition-all duration-300 ease-out before:absolute before:inset-0 before:bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.4),transparent)] before:animate-[progress-shimmer_1.2s_linear_infinite]"
                     style={{ width: `${progress}%` }}
                   />
-                </div>
-                <div className="text-sm text-zinc-400">
-                  Downloading… {progress.toFixed(1)}%
                 </div>
               </div>
             )}
