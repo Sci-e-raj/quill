@@ -17,17 +17,40 @@ function getHeight(resolution?: string): number {
   return parts.length === 2 ? parseInt(parts[1]) : 0;
 }
 
-function ResolutionBadge({ height }: { height: number }) {
-  if (height >= 2160)
-    return <span className="px-2 py-1 text-xs rounded bg-purple-700">4K</span>;
-  if (height >= 1440)
-    return <span className="px-2 py-1 text-xs rounded bg-indigo-700">2K</span>;
-  if (height >= 1080)
-    return <span className="px-2 py-1 text-xs rounded bg-blue-700">1080p</span>;
-  if (height >= 720)
-    return <span className="px-2 py-1 text-xs rounded bg-zinc-700">720p</span>;
+// function ResolutionBadge({ height }: { height: number }) {
+//   if (height >= 2160)
+//     return <span className="px-2 py-1 text-xs rounded bg-purple-700">4K</span>;
+//   if (height >= 1440)
+//     return <span className="px-2 py-1 text-xs rounded bg-indigo-700">2K</span>;
+//   if (height >= 1080)
+//     return <span className="px-2 py-1 text-xs rounded bg-blue-700">1080p</span>;
+//   if (height >= 720)
+//     return <span className="px-2 py-1 text-xs rounded bg-zinc-700">720p</span>;
 
-  return <span className="px-2 py-1 text-xs rounded bg-zinc-800">SD</span>;
+//   return <span className="px-2 py-1 text-xs rounded bg-zinc-800">SD</span>;
+// }
+function ResolutionBadge({ height }: { height: number }) {
+  let label = "SD";
+
+  if (height >= 2160) label = "4K";
+  else if (height >= 1440) label = "2K";
+  else if (height >= 1080) label = "1080p";
+  else if (height >= 720) label = "720p";
+
+  return (
+    <span
+      className="
+        px-3 py-1 text-xs font-bold tracking-wide
+        rounded-md
+        bg-linear-to-b from-yellow-300 to-yellow-500
+        text-black
+        border border-yellow-400
+        shadow-[0_0_10px_rgba(234,179,8,0.35)]
+      "
+    >
+      {label}
+    </span>
+  );
 }
 
 function groupByExt(options: DownloadOption[]) {
@@ -128,32 +151,69 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-950 text-zinc-100 p-6">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-center">Media Downloader</h1>
+    // <main className="min-h-screen bg-zinc-950 text-zinc-100 p-6">
+    <main
+      className="relative min-h-screen overflow-hidden text-zinc-100 p-6
+  bg-linear-to-br from-zinc-950 via-zinc-900 to-black"
+    >
+      {/* background blobs */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 -left-32 w-130 h-130 rounded-full bg-purple-700/25 blur-[140px]" />
+        <div className="absolute top-1/4 -right-32 w-130 h-130 rounded-full bg-indigo-600/25 blur-[140px]" />
+        <div className="absolute bottom-0 left-1/3 w-130 h-130 rounded-full bg-fuchsia-600/20 blur-[160px]" />
+      </div>
 
-        {/* Input */}
-        <div className="flex gap-2">
-          <input
-            value={url}
-            disabled={loading}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste YouTube URL…"
-            className="flex-1 px-4 py-3 rounded bg-zinc-900 border border-zinc-800 disabled:opacity-50"
-          />
-          <button
-            onClick={extract}
-            disabled={loading}
-            className="px-6 py-3 rounded bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50"
-          >
-            {loading ? "Extracting…" : "Extract"}
-          </button>
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.025]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, white 1px, transparent 1px), linear-gradient(to bottom, white 1px, transparent 1px)",
+          backgroundSize: "40px 40px",
+        }}
+      />
+
+      {/* <div className="max-w-4xl mx-auto space-y-6"> */}
+      <div className="relative z-10 max-w-4xl mx-auto space-y-8">
+        <div className="text-center space-y-3">
+          <h1 className="text-4xl font-bold tracking-tight">
+            Media Downloader
+          </h1>
+          <p className="text-zinc-400 max-w-xl mx-auto">
+            Download and stream videos in the highest quality available — fast,
+            clean, and without distractions.
+          </p>
+        </div>
+        <div className="rounded-2xl bg-zinc-900/70 backdrop-blur border border-zinc-800 p-6 shadow-xl">
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* URL input */}
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+                🔗
+              </span>
+              <input
+                value={url}
+                disabled={loading}
+                onChange={(e) => setUrl(e.target.value)}
+                placeholder="Paste YouTube URL…"
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-indigo-500 focus:outline-none disabled:opacity-50"
+              />
+            </div>
+
+            {/* Extract button */}
+            <button
+              onClick={extract}
+              disabled={loading}
+              className="px-8 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 transition"
+            >
+              {loading ? "Extracting…" : "Extract"}
+            </button>
+          </div>
         </div>
 
         {/* Skeleton */}
         {loading && (
           <div className="space-y-3 animate-pulse">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
                 className="h-16 rounded bg-zinc-900 border border-zinc-800"
@@ -206,18 +266,28 @@ export default function Home() {
                       return (
                         <div
                           key={opt.format_id}
-                          className={`flex items-center justify-between p-3 rounded border ${
-                            isBest
-                              ? "bg-zinc-900 border-indigo-600"
-                              : "bg-zinc-900 border-zinc-800"
-                          }`}
+                          className={`flex items-center justify-between p-4 rounded-xl
+                                      bg-white/5 backdrop-blur-xl
+                                      border border-white/10
+                                      shadow-lg
+                                      transition-all duration-200
+                                      hover:bg-white/10 hover:border-white/20 hover:-translate-y-px
+                                      ${isBest ? "ring-1 ring-indigo-500/60" : ""}`}
                         >
                           <div className="flex items-center gap-3">
                             <ResolutionBadge height={height} />
 
                             {isBest && (
-                              <span className="text-xs px-2 py-1 rounded bg-indigo-600">
-                                BEST
+                              <span
+                                className="
+    text-[10px] px-2 py-1 rounded-md
+    bg-white/10 text-white
+    border border-white/20
+    backdrop-blur-md
+    uppercase tracking-wider
+  "
+                              >
+                                Best
                               </span>
                             )}
 
@@ -242,7 +312,10 @@ export default function Home() {
 
                             <button
                               onClick={() => startDownload(opt.format_id)}
-                              className="px-4 py-2 rounded bg-green-600 hover:bg-green-500"
+                              // className="px-4 py-2 rounded bg-green-600 hover:bg-green-500"
+                              className="px-4 py-2 rounded-lg
+  bg-emerald-600/90 hover:bg-emerald-500
+  transition active:scale-95"
                             >
                               ⬇ Download
                             </button>
