@@ -18,35 +18,61 @@ function getHeight(resolution?: string): number {
 }
 
 // function ResolutionBadge({ height }: { height: number }) {
-//   if (height >= 2160)
-//     return <span className="px-2 py-1 text-xs rounded bg-purple-700">4K</span>;
-//   if (height >= 1440)
-//     return <span className="px-2 py-1 text-xs rounded bg-indigo-700">2K</span>;
-//   if (height >= 1080)
-//     return <span className="px-2 py-1 text-xs rounded bg-blue-700">1080p</span>;
-//   if (height >= 720)
-//     return <span className="px-2 py-1 text-xs rounded bg-zinc-700">720p</span>;
+//   let label = "SD";
 
-//   return <span className="px-2 py-1 text-xs rounded bg-zinc-800">SD</span>;
+//   if (height >= 2160) label = "4K";
+//   else if (height >= 1440) label = "2K";
+//   else if (height >= 1080) label = "1080p";
+//   else if (height >= 720) label = "720p";
+
+//   return (
+//     <span
+//       className="
+//         px-3 py-1 text-xs font-bold tracking-wide
+//         rounded-md
+//         bg-linear-to-b from-yellow-300 to-yellow-500
+//         text-black
+//         border border-yellow-400
+//         shadow-[0_0_10px_rgba(234,179,8,0.35)]
+//       "
+//     >
+//       {label}
+//     </span>
+//   );
 // }
 function ResolutionBadge({ height }: { height: number }) {
   let label = "SD";
+  let glow = "";
 
-  if (height >= 2160) label = "4K";
+  if (height >= 2160)
+    return (
+      <span
+        className="
+        glow-4k
+        px-2.5 py-1
+        text-xs font-bold tracking-wide
+        rounded-md
+        text-black
+        border border-yellow-300
+      "
+      >
+        4K
+      </span>
+    );
   else if (height >= 1440) label = "2K";
   else if (height >= 1080) label = "1080p";
   else if (height >= 720) label = "720p";
 
   return (
     <span
-      className="
+      className={`
         px-3 py-1 text-xs font-bold tracking-wide
         rounded-md
         bg-linear-to-b from-yellow-300 to-yellow-500
         text-black
         border border-yellow-400
-        shadow-[0_0_10px_rgba(234,179,8,0.35)]
-      "
+        ${glow}
+      `}
     >
       {label}
     </span>
