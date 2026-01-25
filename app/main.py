@@ -17,8 +17,11 @@ from app.downloader import stream_video
 from datetime import datetime
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI(title="Media Extractor API")
+from app.downloader import download_with_progress
 
+DOWNLOAD_DIR = "downloads"
+
+app = FastAPI(title="Media Extractor API")
 
 class ExtractRequest(BaseModel):
     url: str
@@ -79,3 +82,22 @@ def stream_video_endpoint(url: str, format_id: str):
         }
     )
 
+@app.get("/download/progress")
+def download_progress(url: str, format_id: str):
+    return download_with_progress(url, format_id)
+
+@app.get("/download/{job_id}")
+def download_file(job_id: str):
+    file_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.mp4")
+
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found")
+
+    return FileResponse(
+        path=file_path,
+        media_type="video/mp4",
+        filename=f"{job_id}.mp4",
+        headers={
+            "Content-Disposition": f'attachment; filename="{job_id}.mp4"'
+        },
+    )
