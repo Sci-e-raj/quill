@@ -8,11 +8,18 @@ from fastapi.responses import StreamingResponse
 PROGRESS_RE = re.compile(r"\[download\]\s+(\d+(?:\.\d+)?)%")
 DOWNLOAD_DIR = "downloads"
 
-
 def ensure_dirs():
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
+def get_video_title(url: str) -> str:
+    cmd = ["yt-dlp", "--get-title", url]
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    title = proc.stdout.strip()
+    return title or "video"
 
+def safe_filename(name: str) -> str:
+    name = re.sub(r'[\\/:*?"<>|]+', "", name)
+    return name.strip()
 # -------------------------
 # Blocking download (server-side file)
 # -------------------------
@@ -130,6 +137,11 @@ def download_with_progress(url: str, video_format_id: str):
     job_id = str(uuid.uuid4())
     final_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.mp4")
 
+    title = safe_filename(get_video_title(url))
+    meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
+    with open(meta_path, "w") as f:
+        f.write(title)
+        
     cmd = [
         "yt-dlp",
         "-f",

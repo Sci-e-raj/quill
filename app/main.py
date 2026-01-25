@@ -89,15 +89,21 @@ def download_progress(url: str, format_id: str):
 @app.get("/download/{job_id}")
 def download_file(job_id: str):
     file_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.mp4")
+    meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
 
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="File not found")
 
+    filename = f"{job_id}.mp4"
+    if os.path.exists(meta_path):
+        with open(meta_path) as f:
+            filename = f.read().strip() + ".mp4"
+
     return FileResponse(
         path=file_path,
         media_type="video/mp4",
-        filename=f"{job_id}.mp4",
+        filename=filename,
         headers={
-            "Content-Disposition": f'attachment; filename="{job_id}.mp4"'
+            "Content-Disposition": f'attachment; filename="{filename}"'
         },
     )
