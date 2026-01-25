@@ -17,29 +17,6 @@ function getHeight(resolution?: string): number {
   return parts.length === 2 ? parseInt(parts[1]) : 0;
 }
 
-// function ResolutionBadge({ height }: { height: number }) {
-//   let label = "SD";
-
-//   if (height >= 2160) label = "4K";
-//   else if (height >= 1440) label = "2K";
-//   else if (height >= 1080) label = "1080p";
-//   else if (height >= 720) label = "720p";
-
-//   return (
-//     <span
-//       className="
-//         px-3 py-1 text-xs font-bold tracking-wide
-//         rounded-md
-//         bg-linear-to-b from-yellow-300 to-yellow-500
-//         text-black
-//         border border-yellow-400
-//         shadow-[0_0_10px_rgba(234,179,8,0.35)]
-//       "
-//     >
-//       {label}
-//     </span>
-//   );
-// }
 function ResolutionBadge({ height }: { height: number }) {
   let label = "SD";
   let glow = "";
@@ -125,6 +102,71 @@ export default function Home() {
       setLoading(false);
     }
   }
+  function renderFormat(opt: DownloadOption, idx: number) {
+    const height = getHeight(opt.resolution);
+    const isBest = idx === 0;
+
+    return (
+      <div
+        key={opt.format_id}
+        className={`flex items-center justify-between p-4 rounded-xl
+    min-h-24        // 👈 ADD THIS
+    bg-white/5 backdrop-blur-xl
+    border border-white/10
+    shadow-lg
+    transition-all duration-200
+    hover:bg-white/10 hover:border-white/20 hover:-translate-y-px
+    ${isBest ? "ring-1 ring-indigo-500/60" : ""}
+  `}
+      >
+        <div className="flex items-center gap-3">
+          <ResolutionBadge height={height} />
+
+          {isBest && (
+            <span
+              className="
+              text-[10px] px-2 py-1 rounded-md
+              bg-white/10 text-white
+              border border-white/20
+              backdrop-blur-md
+              uppercase tracking-wider
+            "
+            >
+              Best
+            </span>
+          )}
+
+          <div>
+            <div className="font-medium">{opt.label}</div>
+            <div className="text-sm text-zinc-400">
+              {opt.fps ? `${opt.fps}fps · ` : ""}
+              {opt.filesize
+                ? `${(opt.filesize / 1024 / 1024).toFixed(1)} MB`
+                : ""}
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => setSelectedFormat(opt)}
+            className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700"
+          >
+            ▶ Play
+          </button>
+
+          <button
+            onClick={() => startDownload(opt.format_id)}
+            className="px-4 py-2 rounded-lg
+            bg-emerald-600/90 hover:bg-emerald-500
+            transition active:scale-95"
+          >
+            ⬇ Download
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   function streamUrl(formatId: string) {
     return `http://127.0.0.1:8000/stream?url=${encodeURIComponent(
@@ -176,8 +218,28 @@ export default function Home() {
     };
   }
 
+  function EmptyCard() {
+    return (
+      <div
+        className="
+        min-h-24
+        rounded-xl
+        bg-white/2
+        border border-dashed border-white/10
+      "
+      />
+    );
+  }
+
+  const grouped = video ? groupByExt(video.download_options) : {};
+  const mp4Formats = grouped["mp4"] || [];
+  const webmFormats = grouped["webm"] || [];
+  const otherFormats = Object.entries(grouped).filter(
+    ([ext]) => ext !== "mp4" && ext !== "webm",
+  );
+  const maxRows = Math.max(mp4Formats.length, webmFormats.length);
+
   return (
-    // <main className="min-h-screen bg-zinc-950 text-zinc-100 p-6">
     <main
       className="relative min-h-screen overflow-hidden text-zinc-100 p-6
   bg-linear-to-br from-zinc-950 via-zinc-900 to-black"
@@ -198,8 +260,7 @@ export default function Home() {
         }}
       />
 
-      {/* <div className="max-w-4xl mx-auto space-y-6"> */}
-      <div className="relative z-10 max-w-4xl mx-auto space-y-8">
+      <div className="relative z-10 max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-3">
           <h1 className="text-4xl font-bold tracking-tight">
             Media Downloader
@@ -277,80 +338,36 @@ export default function Home() {
 
             <div className="space-y-2">
               <h3 className="font-semibold">Available Formats</h3>
-              {Object.entries(groupByExt(video.download_options))
-                .sort(([a], [b]) => (a === "mp4" ? -1 : b === "mp4" ? 1 : 0))
-                .map(([ext, formats]) => (
-                  <div key={ext} className="space-y-2">
-                    <h4 className="text-lg font-semibold uppercase text-zinc-300">
-                      {ext} formats
-                    </h4>
-
-                    {formats.map((opt, idx) => {
-                      const height = getHeight(opt.resolution);
-                      const isBest = idx === 0;
-
-                      return (
-                        <div
-                          key={opt.format_id}
-                          className={`flex items-center justify-between p-4 rounded-xl
-                                      bg-white/5 backdrop-blur-xl
-                                      border border-white/10
-                                      shadow-lg
-                                      transition-all duration-200
-                                      hover:bg-white/10 hover:border-white/20 hover:-translate-y-px
-                                      ${isBest ? "ring-1 ring-indigo-500/60" : ""}`}
-                        >
-                          <div className="flex items-center gap-3">
-                            <ResolutionBadge height={height} />
-
-                            {isBest && (
-                              <span
-                                className="
-    text-[10px] px-2 py-1 rounded-md
-    bg-white/10 text-white
-    border border-white/20
-    backdrop-blur-md
-    uppercase tracking-wider
-  "
-                              >
-                                Best
-                              </span>
-                            )}
-
-                            <div>
-                              <div className="font-medium">{opt.label}</div>
-                              <div className="text-sm text-zinc-400">
-                                {opt.fps ? `${opt.fps}fps · ` : ""}
-                                {opt.filesize
-                                  ? `${(opt.filesize / 1024 / 1024).toFixed(1)} MB`
-                                  : ""}
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => setSelectedFormat(opt)}
-                              className="px-4 py-2 rounded bg-zinc-800 hover:bg-zinc-700"
-                            >
-                              ▶ Play
-                            </button>
-
-                            <button
-                              onClick={() => startDownload(opt.format_id)}
-                              // className="px-4 py-2 rounded bg-green-600 hover:bg-green-500"
-                              className="px-4 py-2 rounded-lg
-  bg-emerald-600/90 hover:bg-emerald-500
-  transition active:scale-95"
-                            >
-                              ⬇ Download
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+              <div className="space-y-6">
+                <div className="space-y-6">
+                  {/* Headers */}
+                  <div className="grid grid-cols-2 gap-6 text-sm text-zinc-400 uppercase tracking-wider">
+                    <div>MP4</div>
+                    <div>WEBM</div>
                   </div>
-                ))}
+
+                  {/* Rows */}
+                  <div className="grid grid-cols-2 gap-x-6 gap-y-4">
+                    {Array.from({ length: maxRows }).map((_, i) => (
+                      <div key={i} className="contents">
+                        {/* MP4 cell */}
+                        {mp4Formats[i] ? (
+                          renderFormat(mp4Formats[i], i)
+                        ) : (
+                          <EmptyCard />
+                        )}
+
+                        {/* WEBM cell */}
+                        {webmFormats[i] ? (
+                          renderFormat(webmFormats[i], i)
+                        ) : (
+                          <EmptyCard />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
