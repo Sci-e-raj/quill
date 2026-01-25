@@ -5,8 +5,17 @@ import re
 from typing import Iterator, IO
 from fastapi.responses import StreamingResponse
 
-PROGRESS_RE = re.compile(r"\[download\]\s+(\d+(?:\.\d+)?)%")
 DOWNLOAD_DIR = "downloads"
+
+PHASE_MAP = {
+    "Downloading video": 0,
+    "Downloading audio": 1,
+    "Merging formats": 2,
+}
+
+PROGRESS_RE = re.compile(r"\[download\]\s+(\d+(?:\.\d+)?)%")
+PHASE_RE = re.compile(r"\[download\]\s+(Downloading video|Downloading audio)")
+MERGE_RE = re.compile(r"\[Merger\]")
 
 def ensure_dirs():
     os.makedirs(DOWNLOAD_DIR, exist_ok=True)
@@ -141,7 +150,7 @@ def download_with_progress(url: str, video_format_id: str):
     meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
     with open(meta_path, "w") as f:
         f.write(title)
-        
+
     cmd = [
         "yt-dlp",
         "-f",
@@ -172,6 +181,8 @@ def download_with_progress(url: str, video_format_id: str):
     MAX_TAIL_CHARS = 4000
 
     def event_stream() -> Iterator[str]:
+        yield "data: started\n\n"
+
         try:
             for line in stdout:
                 # keep rolling tail
