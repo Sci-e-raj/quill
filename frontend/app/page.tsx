@@ -280,17 +280,36 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-zinc-900/70 backdrop-blur border border-zinc-800 p-6 shadow-xl">
-          <div className="flex flex-col sm:flex-row gap-3">
+        <div
+          className="
+                      mx-auto w-full max-w-2xl
+                      rounded-2xl
+                      bg-black/30
+                      backdrop-blur-xl
+                      border border-white/10
+                      p-6
+                      shadow-[0_10px_40px_rgba(0,0,0,0.35)]
+                      transition-all duration-300
+  hover:bg-black/15 hover:border-white/20
+                    "
+        >
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (!loading && url.trim()) {
+                extract();
+              }
+            }}
+            // className="flex flex-col sm:flex-row gap-3"
+            className="mx-auto flex flex-col sm:flex-row gap-3 w-full max-w-2xl"
+          >
             {/* URL input */}
             <div className="relative flex-1">
               <span
                 className="
-                            absolute left-3 top-1/2 -translate-y-1/2
-                            text-indigo-300
-                            text-lg
-                            pointer-events-none
-                          "
+        absolute left-3 top-1/2 -translate-y-1/2
+        text-indigo-300 text-lg pointer-events-none
+      "
               >
                 🔗
               </span>
@@ -300,29 +319,53 @@ export default function Home() {
                 disabled={loading}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste YouTube URL…"
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-zinc-900 border border-zinc-800 focus:border-indigo-500 focus:outline-none disabled:opacity-50"
+                className="w-full pl-10 pr-4 py-3 rounded-lg
+        bg-zinc-900 border border-zinc-800
+        focus:border-indigo-500 focus:outline-none
+        disabled:opacity-50"
               />
             </div>
 
             {/* Extract button */}
             <button
-              onClick={extract}
-              disabled={loading}
-              className="px-8 py-3 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-semibold shadow-md hover:shadow-lg transition"
+              type="submit"
+              disabled={loading || !url.trim()}
+              className="
+    px-8 py-3 rounded-lg
+    bg-indigo-500 hover:bg-indigo-400
+    text-white font-semibold
+    shadow-md hover:shadow-lg transition
+    sm:self-stretch
+  "
             >
               {loading ? "Extracting…" : "Extract"}
             </button>
-          </div>
+          </form>
         </div>
 
         {/* Skeleton */}
         {loading && (
-          <div className="space-y-3 animate-pulse">
+          <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-16 rounded bg-zinc-900 border border-zinc-800"
-              />
+                className="
+          h-20 rounded-xl
+          bg-white/10 backdrop-blur-xl
+          border border-white/20
+          shadow-lg
+          relative overflow-hidden
+        "
+              >
+                {/* shimmer */}
+                <div
+                  className="
+            absolute inset-0
+            bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.25),transparent)]
+            animate-[progress-shimmer_1.5s_linear_infinite]
+          "
+                />
+              </div>
             ))}
           </div>
         )}
