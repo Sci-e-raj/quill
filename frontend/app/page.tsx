@@ -25,13 +25,13 @@ function ResolutionBadge({ height }: { height: number }) {
     return (
       <span
         className="
-      px-3 py-1 text-xs font-bold tracking-wide
-      rounded-md
-      bg-gradient-to-r from-yellow-400 via-yellow-300 to-yellow-200
-      text-black
-      shadow-[0_0_8px_rgba(255,255,150,0.6)]
-      border border-yellow-300
-    "
+    glow-4k
+    px-3 py-1
+    text-xs font-bold tracking-wide
+    rounded-md
+    text-black
+    border border-yellow-300
+  "
       >
         4K
       </span>
@@ -242,7 +242,7 @@ export default function Home() {
   return (
     <main
       className="relative min-h-screen overflow-hidden text-zinc-100 p-6
-    bg-gradient-to-br from-purple-800 via-indigo-700 to-cyan-600"
+    bg-linear-to-br from-purple-800 via-indigo-700 to-cyan-600"
     >
       {/* background blobs */}
       <div className="pointer-events-none absolute inset-0">
@@ -279,13 +279,22 @@ export default function Home() {
             clean, and without distractions.
           </p>
         </div>
+
         <div className="rounded-2xl bg-zinc-900/70 backdrop-blur border border-zinc-800 p-6 shadow-xl">
           <div className="flex flex-col sm:flex-row gap-3">
             {/* URL input */}
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500">
+              <span
+                className="
+                            absolute left-3 top-1/2 -translate-y-1/2
+                            text-indigo-300
+                            text-lg
+                            pointer-events-none
+                          "
+              >
                 🔗
               </span>
+
               <input
                 value={url}
                 disabled={loading}
@@ -342,7 +351,7 @@ export default function Home() {
                 {/* Progress bar */}
                 <div className="relative h-3 rounded-full bg-zinc-800/70 overflow-hidden">
                   <div
-                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-green-400 via-lime-300 to-green-500 transition-all duration-300 ease-out before:absolute before:inset-0 before:bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.4),transparent)] before:animate-[progress-shimmer_1.2s_linear_infinite]"
+                    className="absolute inset-y-0 left-0 rounded-full bg-linear-to-r from-green-400 via-lime-300 to-green-500 transition-all duration-300 ease-out before:absolute before:inset-0 before:bg-[linear-gradient(110deg,transparent,rgba(255,255,255,0.4),transparent)] before:animate-[progress-shimmer_1.2s_linear_infinite]"
                     style={{ width: `${progress}%` }}
                   />
                 </div>

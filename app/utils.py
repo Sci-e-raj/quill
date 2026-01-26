@@ -7,7 +7,7 @@ def normalize_formats(raw_formats: list):
 
         fps = f.get("fps")
         if isinstance(fps, (int, float)):
-            fps = round(fps, 2)   # keep it clean
+            fps = round(fps, 2)   
         else:
             fps = None
 
