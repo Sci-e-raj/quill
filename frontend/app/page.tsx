@@ -351,7 +351,7 @@ export default function Home() {
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste YouTube URL…"
                 className="w-full pl-12 pr-4 py-3 rounded-lg
-        bg-zinc-900 border border-zinc-800
+        bg-zinc-700 border border-zinc-700/60
         focus:border-indigo-500 focus:outline-none
         disabled:opacity-50"
               />
