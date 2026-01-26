@@ -271,9 +271,21 @@ export default function Home() {
 
       <div className="relative z-10 max-w-6xl mx-auto space-y-8">
         <div className="text-center space-y-3">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Media Downloader
+          <h1 className="flex items-center justify-center gap-3 text-4xl font-bold tracking-tight">
+            <svg
+              width="60"
+              height="60"
+              viewBox="0 0 24 24"
+              fill="none"
+              className="drop-shadow-[0_0_8px_rgba(255,0,0,0.45)]"
+            >
+              <rect x="2" y="6" width="20" height="12" rx="3" fill="#FF0000" />
+              <polygon points="10,9 16,12 10,15" fill="white" />
+            </svg>
+
+            <span>Youtube Downloader 4K</span>
           </h1>
+
           <p className="text-zinc-400 max-w-xl mx-auto">
             Download and stream videos in the highest quality available — fast,
             clean, and without distractions.
@@ -305,13 +317,32 @@ export default function Home() {
           >
             {/* URL input */}
             <div className="relative flex-1">
-              <span
+              {/* <span
                 className="
         absolute left-3 top-1/2 -translate-y-1/2
         text-indigo-300 text-lg pointer-events-none
       "
               >
                 🔗
+              </span> */}
+              <span
+                className="
+    absolute left-3 top-1/2 -translate-y-1/2
+    pointer-events-none
+    opacity-90
+  "
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                  <rect
+                    x="2"
+                    y="6"
+                    width="20"
+                    height="12"
+                    rx="3"
+                    fill="#FF0000"
+                  />
+                  <polygon points="10,9 16,12 10,15" fill="white" />
+                </svg>
               </span>
 
               <input
@@ -319,7 +350,7 @@ export default function Home() {
                 disabled={loading}
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="Paste YouTube URL…"
-                className="w-full pl-10 pr-4 py-3 rounded-lg
+                className="w-full pl-12 pr-4 py-3 rounded-lg
         bg-zinc-900 border border-zinc-800
         focus:border-indigo-500 focus:outline-none
         disabled:opacity-50"
