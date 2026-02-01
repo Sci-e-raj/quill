@@ -1,4 +1,4 @@
-# 🎬 Universal Media Downloader & Extractor
+# 🎬 QUILL : Universal Media Downloader & Extractor
 
 A **modern, full‑stack YouTube video downloader and streamer** built with **FastAPI** and **Next.js**.
 It supports **high‑quality video downloads (including 4K when available)**, **real‑time progress tracking**, and **instant browser playback via streaming** — all with a clean, responsive UI.
