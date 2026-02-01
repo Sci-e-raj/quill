@@ -4,6 +4,7 @@ import uuid
 import re
 from typing import Iterator, IO
 from fastapi.responses import StreamingResponse
+import sys
 
 DOWNLOAD_DIR = "downloads"
 
@@ -29,6 +30,7 @@ def get_video_title(url: str) -> str:
 def safe_filename(name: str) -> str:
     name = re.sub(r'[\\/:*?"<>|]+', "", name)
     return name.strip()
+
 # -------------------------
 # Blocking download (server-side file)
 # -------------------------
@@ -146,10 +148,14 @@ def download_with_progress(url: str, video_format_id: str):
     job_id = str(uuid.uuid4())
     final_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.mp4")
 
-    title = safe_filename(get_video_title(url))
-    meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
-    with open(meta_path, "w") as f:
-        f.write(title)
+    # Get and save title
+    try:
+        title = safe_filename(get_video_title(url))
+        meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
+        with open(meta_path, "w", encoding="utf-8") as f:
+            f.write(title)
+    except Exception as e:
+        print(f"Warning: Could not save title: {e}", file=sys.stderr)
 
     cmd = [
         "yt-dlp",
@@ -160,8 +166,11 @@ def download_with_progress(url: str, video_format_id: str):
         "-o",
         final_path,
         "--newline",
+        "--no-part",  # Don't use .part files
         url,
     ]
+
+    print(f"Starting download with command: {' '.join(cmd)}", file=sys.stderr)
 
     process = subprocess.Popen(
         cmd,
@@ -181,10 +190,18 @@ def download_with_progress(url: str, video_format_id: str):
     MAX_TAIL_CHARS = 4000
 
     def event_stream() -> Iterator[str]:
+        """Generator that yields SSE-formatted progress updates"""
+        
+        # Send initial started event
         yield "data: started\n\n"
+        
+        last_progress = 0.0
 
         try:
             for line in stdout:
+                # Print to stderr for debugging
+                print(f"yt-dlp: {line.rstrip()}", file=sys.stderr)
+                
                 # keep rolling tail
                 tail_lines.append(line)
                 # trim if too long
@@ -194,12 +211,24 @@ def download_with_progress(url: str, video_format_id: str):
                 # parse progress lines
                 m = PROGRESS_RE.search(line)
                 if m:
-                    yield f"data: {m.group(1)}\n\n"
+                    progress = float(m.group(1))
+                    # Only send updates if progress changed significantly (reduces noise)
+                    if progress - last_progress >= 0.1 or progress >= 100.0:
+                        last_progress = progress
+                        yield f"data: {progress}\n\n"
+                
+                # Also detect merge phase
+                if MERGE_RE.search(line):
+                    yield f"data: 99.9\n\n"
+            
             # yt-dlp finished streaming output
             rc = process.wait()
+            print(f"yt-dlp exited with code: {rc}", file=sys.stderr)
+            
         except Exception as e:
             # if anything unexpected happened, return error with short message
             err_text = str(e)
+            print(f"Exception during download: {err_text}", file=sys.stderr)
             yield f"data: error:{err_text}\n\n"
             return
 
@@ -207,17 +236,50 @@ def download_with_progress(url: str, video_format_id: str):
         if rc != 0:
             # include some tail output for debugging
             tail = "".join(tail_lines[-20:])
-            short = tail.strip().replace("\n", " ")[:1000]
-            yield f"data: error:yt-dlp exited {rc} {short}\n\n"
+            short = tail.strip().replace("\n", " ")[:500]
+            print(f"yt-dlp failed with rc={rc}: {short}", file=sys.stderr)
+            yield f"data: error:yt-dlp exited {rc}: {short}\n\n"
             return
 
+        # Check if file exists
         if not os.path.exists(final_path):
-            tail = "".join(tail_lines[-20:])
-            short = tail.strip().replace("\n", " ")[:1000]
-            yield f"data: error:file-not-found:{short}\n\n"
+            # Try to find the file with different extensions
+            found_file = None
+            for ext in ["mp4", "mkv", "webm", "m4a"]:
+                alt_path = final_path.replace(".mp4", f".{ext}")
+                if os.path.exists(alt_path):
+                    found_file = alt_path
+                    break
+            
+            if found_file:
+                # Rename to expected path
+                print(f"Found file with different extension: {found_file}, renaming to {final_path}", file=sys.stderr)
+                os.rename(found_file, final_path)
+            else:
+                tail = "".join(tail_lines[-20:])
+                short = tail.strip().replace("\n", " ")[:500]
+                print(f"File not found at {final_path}", file=sys.stderr)
+                print(f"Directory contents: {os.listdir(DOWNLOAD_DIR)}", file=sys.stderr)
+                yield f"data: error:file-not-found:{short}\n\n"
+                return
+
+        # Verify file is not empty
+        file_size = os.path.getsize(final_path)
+        print(f"Download complete! File size: {file_size} bytes at {final_path}", file=sys.stderr)
+        
+        if file_size == 0:
+            yield f"data: error:downloaded file is empty\n\n"
             return
 
         # success
         yield f"data: done:{job_id}\n\n"
 
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+    return StreamingResponse(
+        event_stream(), 
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",  # Disable buffering for nginx
+            "Connection": "keep-alive",
+        }
+    )

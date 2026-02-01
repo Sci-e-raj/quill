@@ -26,12 +26,17 @@ app = FastAPI(title="Media Extractor API")
 class ExtractRequest(BaseModel):
     url: str
 
+# IMPROVED CORS CONFIGURATION
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],  # Important for SSE
 )
 
 @app.post("/extract", response_model=VideoInfo)
@@ -57,6 +62,10 @@ def extract_video(req: ExtractRequest):
 
 @app.get("/download")
 def download_video(url: str, format_id: str):
+    """
+    Blocking download endpoint - downloads entire file before returning.
+    Not recommended for large files.
+    """
     try:
         file_path = download_and_merge(url, format_id)
 
@@ -73,6 +82,9 @@ def download_video(url: str, format_id: str):
 
 @app.get("/stream")
 def stream_video_endpoint(url: str, format_id: str):
+    """
+    Streaming endpoint for video playback in browser.
+    """
     return StreamingResponse(
         stream_video(url, format_id),
         media_type="video/mp4",
@@ -84,20 +96,32 @@ def stream_video_endpoint(url: str, format_id: str):
 
 @app.get("/download/progress")
 def download_progress(url: str, format_id: str):
+    """
+    SSE endpoint that streams download progress.
+    Returns events: started, <percentage>, done:<job_id>, or error:<msg>
+    """
     return download_with_progress(url, format_id)
 
 @app.get("/download/{job_id}")
 def download_file(job_id: str):
+    """
+    Endpoint to download a completed file by job_id.
+    """
     file_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.mp4")
     meta_path = os.path.join(DOWNLOAD_DIR, f"{job_id}.txt")
 
     if not os.path.exists(file_path):
-        raise HTTPException(status_code=404, detail="File not found")
+        raise HTTPException(status_code=404, detail=f"File not found: {job_id}")
 
     filename = f"{job_id}.mp4"
     if os.path.exists(meta_path):
-        with open(meta_path) as f:
-            filename = f.read().strip() + ".mp4"
+        try:
+            with open(meta_path, encoding="utf-8") as f:
+                title = f.read().strip()
+                if title:
+                    filename = f"{title}.mp4"
+        except Exception:
+            pass  # Use default filename if metadata read fails
 
     return FileResponse(
         path=file_path,
@@ -107,3 +131,8 @@ def download_file(job_id: str):
             "Content-Disposition": f'attachment; filename="{filename}"'
         },
     )
+
+# Add health check endpoint
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "download_dir": DOWNLOAD_DIR}
