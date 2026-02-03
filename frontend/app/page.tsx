@@ -284,7 +284,7 @@
 
 //         .shimmer {
 //           animation: shimmer 2s infinite linear;
-//           background: linear-gradient(
+//           background: linear-linear(
 //             to right,
 //             #18181b 0%,
 //             #27272a 50%,
@@ -335,7 +335,7 @@
 //           }
 //         }
 
-//         @keyframes gradient-shift {
+//         @keyframes linear-shift {
 //           0%,
 //           100% {
 //             background-position: 0% 50%;
@@ -350,7 +350,7 @@
 //         }
 
 //         .animated-bg {
-//           background: linear-gradient(
+//           background: linear-linear(
 //             -45deg,
 //             #000000,
 //             #0a0a0a,
@@ -358,13 +358,13 @@
 //             #0a0515
 //           );
 //           background-size: 400% 400%;
-//           animation: gradient-shift 15s ease infinite;
+//           animation: linear-shift 15s ease infinite;
 //         }
 
 //         .grid-pattern {
 //           background-image:
-//             linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-//             linear-gradient(
+//             linear-linear(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+//             linear-linear(
 //               90deg,
 //               rgba(255, 255, 255, 0.02) 1px,
 //               transparent 1px
@@ -451,7 +451,7 @@
 //       </div>
 
 //       {/* Vignette */}
-//       <div className="fixed inset-0 pointer-events-none bg-gradient-radial from-transparent via-transparent to-black/60"></div>
+//       <div className="fixed inset-0 pointer-events-none bg-linear-radial from-transparent via-transparent to-black/60"></div>
 
 //       {/* Content - Higher z-index */}
 //       <div className="relative z-10 flex-1 flex flex-col">
@@ -740,7 +740,7 @@ function ResolutionBadge({ height }: { height: number }) {
     return (
       <div className="relative">
         <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-lg"></div>
-        <span className="relative inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs font-bold tracking-wider rounded-md shadow-lg">
+        <span className="relative inline-flex items-center gap-1.5 px-3 py-1 bg-linear-to-r from-amber-500 to-orange-600 text-white text-xs font-bold tracking-wider rounded-md shadow-lg">
           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
           </svg>
@@ -827,12 +827,12 @@ export default function Home() {
     return (
       <div
         key={opt.format_id}
-        className={`group relative bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 rounded-xl p-5 transition-all duration-300 min-h-[120px] flex flex-col justify-between ${
+        className={`group relative bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 rounded-xl p-5 transition-all duration-300 min-h-30 flex flex-col justify-between ${
           isBest ? "ring-1 ring-amber-500/50" : ""
         }`}
       >
         {isBest && (
-          <div className="absolute -top-2.5 -right-2.5 px-2.5 py-1 bg-gradient-to-r from-amber-500 to-orange-600 text-white text-[10px] font-bold rounded-full shadow-lg">
+          <div className="absolute -top-2.5 -right-2.5 px-2.5 py-1 bg-linear-to-r from-amber-500 to-orange-600 text-white text-[10px] font-bold rounded-full shadow-lg">
             RECOMMENDED
           </div>
         )}
@@ -967,7 +967,7 @@ export default function Home() {
 
   function EmptyCard() {
     return (
-      <div className="min-h-[120px] rounded-xl bg-zinc-900/40 border border-dashed border-zinc-800 flex items-center justify-center text-zinc-600 text-sm">
+      <div className="min-h-30 rounded-xl bg-zinc-900/40 border border-dashed border-zinc-800 flex items-center justify-center text-zinc-600 text-sm">
         No format available
       </div>
     );
@@ -1001,7 +1001,7 @@ export default function Home() {
 
         .shimmer {
           animation: shimmer 2s infinite linear;
-          background: linear-gradient(
+          background: linear-linear(
             to right,
             #18181b 0%,
             #27272a 50%,
@@ -1052,7 +1052,7 @@ export default function Home() {
           }
         }
 
-        @keyframes gradient-shift {
+        @keyframes linear-shift {
           0%,
           100% {
             background-position: 0% 50%;
@@ -1091,25 +1091,15 @@ export default function Home() {
         }
 
         .animated-bg {
-          background: linear-gradient(
-            -45deg,
-            #000000,
-            #0a0a0a,
-            #1a0a0a,
-            #0a0515
-          );
+          background: linear-linear(-45deg, #000000, #0a0a0a, #1a0a0a, #0a0515);
           background-size: 400% 400%;
-          animation: gradient-shift 15s ease infinite;
+          animation: linear-shift 15s ease infinite;
         }
 
         .grid-pattern {
           background-image:
-            linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-            linear-gradient(
-              90deg,
-              rgba(255, 255, 255, 0.02) 1px,
-              transparent 1px
-            );
+            linear-linear(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+            linear-linear(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
           background-size: 50px 50px;
         }
 
@@ -1136,7 +1126,7 @@ export default function Home() {
       {/* Animated Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
-          className="absolute w-[500px] h-[500px] bg-gradient-to-br from-red-600/20 to-orange-600/20 rounded-full blur-3xl"
+          className="absolute w-125 h-125 bg-linear-to-br from-red-600/20 to-orange-600/20 rounded-full blur-3xl"
           style={{
             top: "-10%",
             left: "-10%",
@@ -1145,7 +1135,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-[400px] h-[400px] bg-gradient-to-br from-purple-600/15 to-pink-600/15 rounded-full blur-3xl"
+          className="absolute w-100 h-100 bg-linear-to-br from-purple-600/15 to-pink-600/15 rounded-full blur-3xl"
           style={{
             top: "40%",
             right: "-5%",
@@ -1154,7 +1144,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-[450px] h-[450px] bg-gradient-to-br from-blue-600/15 to-cyan-600/15 rounded-full blur-3xl"
+          className="absolute w-112.5 h-112.5 bg-linear-to-br from-blue-600/15 to-cyan-600/15 rounded-full blur-3xl"
           style={{
             bottom: "-15%",
             left: "30%",
@@ -1163,7 +1153,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-[300px] h-[300px] bg-gradient-to-br from-yellow-600/20 to-red-600/20 rounded-full blur-2xl"
+          className="absolute w-75 h-75 bg-linear-to-br from-yellow-600/20 to-red-600/20 rounded-full blur-2xl"
           style={{
             top: "15%",
             right: "20%",
@@ -1172,7 +1162,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-[250px] h-[250px] bg-gradient-to-br from-green-600/15 to-emerald-600/15 rounded-full blur-2xl"
+          className="absolute w-62.5 h-62.5 bg-linear-to-br from-green-600/15 to-emerald-600/15 rounded-full blur-2xl"
           style={{
             bottom: "20%",
             left: "10%",
@@ -1307,11 +1297,11 @@ export default function Home() {
 
       {/* Scan Line Effect */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="scan-line absolute w-full h-32 bg-gradient-to-b from-transparent via-red-500/5 to-transparent"></div>
+        <div className="scan-line absolute w-full h-32 bg-linear-to-b from-transparent via-red-500/5 to-transparent"></div>
       </div>
 
       {/* Vignette */}
-      <div className="fixed inset-0 pointer-events-none bg-gradient-radial from-transparent via-transparent to-black/60"></div>
+      <div className="fixed inset-0 pointer-events-none bg-linear-radial from-transparent via-transparent to-black/60"></div>
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex flex-col">
@@ -1321,8 +1311,8 @@ export default function Home() {
             <div className="flex items-center h-16">
               <div className="flex items-center gap-3">
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-red-500 to-red-600 rounded-xl blur-md opacity-50 group-hover:opacity-70 transition-opacity"></div>
-                  <div className="relative w-10 h-10 bg-gradient-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/10">
+                  <div className="absolute inset-0 bg-linear-to-br from-red-500 to-red-600 rounded-xl blur-md opacity-50 group-hover:opacity-70 transition-opacity"></div>
+                  <div className="relative w-10 h-10 bg-linear-to-br from-red-600 to-red-700 rounded-xl flex items-center justify-center shadow-lg ring-1 ring-white/10">
                     <svg
                       className="w-5 h-5 text-white"
                       fill="currentColor"
@@ -1351,7 +1341,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6 py-12">
             {/* Hero Section */}
             <div className="mb-12 text-center space-y-4">
-              <h2 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent drop-shadow-2xl">
+              <h2 className="text-5xl font-bold tracking-tight bg-linear-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent drop-shadow-2xl">
                 Download Videos in Stunning Quality
               </h2>
               <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
@@ -1380,7 +1370,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={loading || !url.trim()}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-8 py-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-600 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-red-600/50 disabled:shadow-none"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-8 py-3 bg-linear-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-zinc-800 disabled:to-zinc-800 disabled:text-zinc-600 text-white rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-red-600/50 disabled:shadow-none"
                   >
                     {loading ? (
                       <div className="flex items-center gap-2">
@@ -1419,7 +1409,7 @@ export default function Home() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-[120px] rounded-xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 shimmer shadow-xl"
+                    className="h-30 rounded-xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 shimmer shadow-xl"
                   />
                 ))}
               </div>
@@ -1428,7 +1418,7 @@ export default function Home() {
             {/* Video Content */}
             {video && (
               <div className="space-y-8 max-w-5xl mx-auto">
-                <div className="bg-gradient-to-r from-zinc-900/90 to-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-8 shadow-2xl">
+                <div className="bg-linear-to-r from-zinc-900/90 to-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-8 shadow-2xl">
                   <div className="flex items-start gap-6">
                     {video.thumbnail && (
                       <img
@@ -1495,10 +1485,10 @@ export default function Home() {
 
                     <div className="relative h-2 bg-zinc-800 rounded-full overflow-hidden">
                       <div
-                        className="absolute inset-y-0 left-0 bg-gradient-to-r from-red-600 to-red-500 rounded-full transition-all duration-300 ease-out shadow-lg shadow-red-500/50"
+                        className="absolute inset-y-0 left-0 bg-linear-to-r from-red-600 to-red-500 rounded-full transition-all duration-300 ease-out shadow-lg shadow-red-500/50"
                         style={{ width: `${progress}%` }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent shimmer"></div>
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent shimmer"></div>
                       </div>
                     </div>
                   </div>
