@@ -20,51 +20,57 @@ function getHeight(resolution?: string): number {
 function ResolutionBadge({ height }: { height: number }) {
   if (height >= 4320) {
     return (
-      <div className="relative">
-        <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-lg"></div>
-        <span className="relative inline-flex items-center gap-1.5 px-3 py-1 bg-linear-to-r from-amber-500 to-orange-600 text-white text-xs font-bold tracking-wider rounded-md shadow-lg">
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-          8K ULTRA HD
+      <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 bg-linear-to-r from-yellow-500/10 to-orange-500/10 backdrop-blur-sm border border-yellow-500/30 rounded-lg">
+        <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.6)]"></div>
+        <span className="text-xs font-bold tracking-wide text-yellow-400">
+          8K ULTRA
         </span>
       </div>
     );
   } else if (height >= 2160) {
     return (
-      <div className="relative">
-        <div className="absolute inset-0 bg-amber-500/20 blur-xl rounded-lg"></div>
-        <span className="relative inline-flex items-center gap-1.5 px-3 py-1 bg-linear-to-r from-amber-500 to-orange-600 text-white text-xs font-bold tracking-wider rounded-md shadow-lg">
-          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-          </svg>
-          4K ULTRA HD
+      <div className="relative inline-flex items-center gap-2 px-3.5 py-1.5 bg-linear-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-sm border border-amber-500/30 rounded-lg">
+        <div className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></div>
+        <span className="text-xs font-bold tracking-wide text-amber-400">
+          4K ULTRA
         </span>
       </div>
     );
   } else if (height >= 1440) {
     return (
-      <span className="px-3 py-1 bg-violet-600 text-white text-xs font-semibold tracking-wide rounded-md">
-        2K QHD
-      </span>
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-violet-500/10 backdrop-blur-sm border border-violet-500/30 rounded-lg">
+        <div className="w-1.5 h-1.5 rounded-full bg-violet-500"></div>
+        <span className="text-xs font-semibold tracking-wide text-violet-400">
+          2K QHD
+        </span>
+      </div>
     );
   } else if (height >= 1080) {
     return (
-      <span className="px-3 py-1 bg-blue-600 text-white text-xs font-semibold tracking-wide rounded-md">
-        1080p FULL HD
-      </span>
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 rounded-lg">
+        <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+        <span className="text-xs font-semibold tracking-wide text-blue-400">
+          1080p FHD
+        </span>
+      </div>
     );
   } else if (height >= 720) {
     return (
-      <span className="px-3 py-1 bg-emerald-600 text-white text-xs font-semibold tracking-wide rounded-md">
-        720p HD
-      </span>
+      <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-emerald-500/10 backdrop-blur-sm border border-emerald-500/30 rounded-lg">
+        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
+        <span className="text-xs font-semibold tracking-wide text-emerald-400">
+          720p HD
+        </span>
+      </div>
     );
   }
   return (
-    <span className="px-3 py-1 bg-gray-600 text-white text-xs font-semibold tracking-wide rounded-md">
-      SD
-    </span>
+    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-zinc-500/10 backdrop-blur-sm border border-zinc-500/30 rounded-lg">
+      <div className="w-1.5 h-1.5 rounded-full bg-zinc-500"></div>
+      <span className="text-xs font-semibold tracking-wide text-zinc-400">
+        SD
+      </span>
+    </div>
   );
 }
 
@@ -121,13 +127,22 @@ export default function Home() {
     return (
       <div
         key={opt.format_id}
-        className={`group relative bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 rounded-xl p-5 transition-all duration-300 min-h-30 flex flex-col justify-between ${
-          isBest ? "ring-1 ring-amber-500/50" : ""
+        className={`group relative bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 hover:border-zinc-700 rounded-xl p-5 transition-all duration-300 min-h-[120px] flex flex-col justify-between ${
+          isBest
+            ? "ring-1 ring-amber-400/40 shadow-[0_0_20px_rgba(251,191,36,0.1)]"
+            : ""
         }`}
       >
         {isBest && (
-          <div className="absolute -top-2.5 -right-2.5 px-2.5 py-1 bg-linear-to-r from-amber-500 to-orange-600 text-white text-[10px] font-bold rounded-full shadow-lg">
-            RECOMMENDED
+          <div className="absolute -top-2.5 -right-2.5 inline-flex items-center gap-1.5 px-3 py-1.5 bg-linear-to-r from-amber-500/20 to-orange-500/20 backdrop-blur-md border border-amber-400/40 text-amber-300 text-[10px] font-bold rounded-full shadow-lg">
+            <svg
+              className="w-2.5 h-2.5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            BEST QUALITY
           </div>
         )}
 
@@ -261,7 +276,7 @@ export default function Home() {
 
   function EmptyCard() {
     return (
-      <div className="min-h-30 rounded-xl bg-zinc-900/40 border border-dashed border-zinc-800 flex items-center justify-center text-zinc-600 text-sm">
+      <div className="min-h-[120px] rounded-xl bg-zinc-900/40 border border-dashed border-zinc-800 flex items-center justify-center text-zinc-600 text-sm">
         No format available
       </div>
     );
@@ -346,27 +361,13 @@ export default function Home() {
           }
         }
 
-        @keyframes linear-shift {
+        @keyframes-linear-shift {
           0%,
           100% {
             background-position: 0% 50%;
           }
           50% {
             background-position: 100% 50%;
-          }
-        }
-
-        @keyframes particle-float {
-          0% {
-            transform: translateY(0px) translateX(0px);
-            opacity: 0.2;
-          }
-          50% {
-            opacity: 0.4;
-          }
-          100% {
-            transform: translateY(-100vh) translateX(50px);
-            opacity: 0;
           }
         }
 
@@ -387,7 +388,7 @@ export default function Home() {
         .animated-bg {
           background: linear-linear(-45deg, #000000, #0a0a0a, #1a0a0a, #0a0515);
           background-size: 400% 400%;
-          animation: linear-shift 15s ease infinite;
+          animation: -linear-shift 15s ease infinite;
         }
 
         .grid-pattern {
@@ -420,7 +421,7 @@ export default function Home() {
       {/* Animated Orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
-          className="absolute w-125 h-125 bg-linear-to-br from-red-600/20 to-orange-600/20 rounded-full blur-3xl"
+          className="absolute w-[500px] h-[500px] bg-linear-to-br from-red-600/20 to-orange-600/20 rounded-full blur-3xl"
           style={{
             top: "-10%",
             left: "-10%",
@@ -429,7 +430,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-100 h-100 bg-linear-to-br from-purple-600/15 to-pink-600/15 rounded-full blur-3xl"
+          className="absolute w-[400px] h-[400px] bg-linear-to-br from-purple-600/15 to-pink-600/15 rounded-full blur-3xl"
           style={{
             top: "40%",
             right: "-5%",
@@ -438,7 +439,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-112.5 h-112.5 bg-linear-to-br from-blue-600/15 to-cyan-600/15 rounded-full blur-3xl"
+          className="absolute w-[450px] h-[450px] bg-linear-to-br from-blue-600/15 to-cyan-600/15 rounded-full blur-3xl"
           style={{
             bottom: "-15%",
             left: "30%",
@@ -447,7 +448,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-75 h-75 bg-linear-to-br from-yellow-600/20 to-red-600/20 rounded-full blur-2xl"
+          className="absolute w-[300px] h-[300px] bg-linear-to-br from-yellow-600/20 to-red-600/20 rounded-full blur-2xl"
           style={{
             top: "15%",
             right: "20%",
@@ -456,7 +457,7 @@ export default function Home() {
         ></div>
 
         <div
-          className="absolute w-62.5 h-62.5 bg-linear-to-br from-green-600/15 to-emerald-600/15 rounded-full blur-2xl"
+          className="absolute w-[250px] h-[250px] bg-linear-to-br from-green-600/15 to-emerald-600/15 rounded-full blur-2xl"
           style={{
             bottom: "20%",
             left: "10%",
@@ -465,7 +466,7 @@ export default function Home() {
         ></div>
       </div>
 
-      {/* Floating Particles - STATIC POSITIONS */}
+      {/* Floating Particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute w-1 h-1 bg-white/30 rounded-full"
@@ -595,7 +596,7 @@ export default function Home() {
       </div>
 
       {/* Vignette */}
-      <div className="fixed inset-0 pointer-events-none bg-linear-radial from-transparent via-transparent to-black/60"></div>
+      <div className="fixed inset-0 pointer-events-none bg-[radial-linear(ellipse_at_center,transparent_0%,transparent_60%,black_100%)]"></div>
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex flex-col">
@@ -703,7 +704,7 @@ export default function Home() {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="h-30 rounded-xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 shimmer shadow-xl"
+                    className="h-[120px] rounded-xl bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 shimmer shadow-xl"
                   />
                 ))}
               </div>
